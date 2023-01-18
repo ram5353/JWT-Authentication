@@ -8,6 +8,7 @@ import { registerValidation } from '../helper/validate';
 
 import styles from '../styles/Username.module.css';
 import convertToBase64 from '../helper/convert';
+import { registerUser } from '../helper/helper';
 
 export default function Register() {
 
@@ -25,7 +26,14 @@ export default function Register() {
     validateOnChange: false,
     onSubmit : async values => {
       values = await Object.assign(values, { profile : file || ''})
-      console.log(values);
+      let registerPromise = registerUser(values)
+      toast.promise(registerPromise, {
+        loading: 'Creating...',
+        success : <b>Register Successfully...!</b>,
+        error : <b>Could not Register.</b>
+      });
+
+      registerPromise.then(function(){ navigate('/')});
     }
   })
 
